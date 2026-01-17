@@ -1,0 +1,56 @@
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs/
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.vs/
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Mac OS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# Linux
+.directory
+.Trash-*
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.bak
+
+# Security
+*.pem
+*.key
+*.crt
+*.csr
+
+# Container scan results
+trivy-results.json
+trivy-results.sarif
+grype-results.json
+grype-results.sarif
+
+# SBOM files
+sbom*.json
+sbom*.xml

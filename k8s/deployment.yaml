@@ -1,0 +1,94 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stunnel
+  namespace: stunnel
+  labels:
+    app.kubernetes.io/name: stunnel
+    app.kubernetes.io/component: tls-proxy
+    app.kubernetes.io/version: "latest"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: stunnel
+      app.kubernetes.io/component: tls-proxy
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: stunnel
+        app.kubernetes.io/component: tls-proxy
+        app.kubernetes.io/version: "latest"
+      annotations:
+        prometheus.io/scrape: "false"
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+
+      containers:
+        - name: stunnel
+          image: docker.io/mbologna/stunnel:latest
+          imagePullPolicy: Always
+
+          ports:
+            - name: tls
+              containerPort: 6697
+              protocol: TCP
+
+          envFrom:
+            - configMapRef:
+                name: stunnel-config
+
+          resources:
+            limits:
+              memory: 256Mi
+              cpu: 500m
+            requests:
+              memory: 64Mi
+              cpu: 50m
+
+          livenessProbe:
+            tcpSocket:
+              port: 6697
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
+
+          readinessProbe:
+            tcpSocket:
+              port: 6697
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 1000
+            capabilities:
+              drop:
+                - ALL
+
+          volumeMounts:
+            - name: run
+              mountPath: /var/run/stunnel
+            - name: log
+              mountPath: /var/log/stunnel
+            - name: tmp
+              mountPath: /tmp
+
+      volumes:
+        - name: run
+          emptyDir: {}
+        - name: log
+          emptyDir: {}
+        - name: tmp
+          emptyDir: {}
