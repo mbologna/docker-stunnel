@@ -13,6 +13,7 @@ RUN apk add --no-cache \
     stunnel \
     openssl \
     netcat-openbsd \
+    gettext \
     tini
 
 # Create stunnel user and required directories
@@ -42,10 +43,10 @@ output = /var/log/stunnel/stunnel.log
 cert = /etc/stunnel/stunnel.pem
 key = /etc/stunnel/stunnel.pem
 
-[${STUNNEL_SERVICE:-stunnel}]
-client = ${STUNNEL_CLIENT:-no}
-accept = ${STUNNEL_ACCEPT:-6697}
-connect = ${STUNNEL_CONNECT:-localhost:6667}
+[$STUNNEL_SERVICE]
+client = $STUNNEL_CLIENT
+accept = $STUNNEL_ACCEPT
+connect = $STUNNEL_CONNECT
 EOF
 
 # Create entrypoint script
@@ -53,8 +54,16 @@ COPY --chmod=755 <<'EOF' /usr/local/bin/entrypoint.sh
 #!/bin/sh
 set -e
 
+# Set defaults
+export STUNNEL_SERVICE="${STUNNEL_SERVICE:-stunnel}"
+export STUNNEL_CLIENT="${STUNNEL_CLIENT:-no}"
+export STUNNEL_ACCEPT="${STUNNEL_ACCEPT:-6697}"
+export STUNNEL_CONNECT="${STUNNEL_CONNECT:-localhost:6667}"
+
 # Expand environment variables in config template
-envsubst < /etc/stunnel/stunnel.conf.template > /etc/stunnel/stunnel.conf
+envsubst '$STUNNEL_SERVICE $STUNNEL_CLIENT $STUNNEL_ACCEPT $STUNNEL_CONNECT' \
+  < /etc/stunnel/stunnel.conf.template \
+  > /etc/stunnel/stunnel.conf
 
 # Display configuration for debugging
 echo "=== Stunnel Configuration ==="
