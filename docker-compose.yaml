@@ -1,0 +1,53 @@
+version: '3.9'
+
+services:
+  stunnel:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      cache_from:
+        - docker.io/mbologna/stunnel:latest
+    image: docker.io/mbologna/stunnel:latest
+    container_name: stunnel
+    restart: unless-stopped
+
+    ports:
+      - "${STUNNEL_PORT:-6697}:6697"
+
+    environment:
+      - STUNNEL_SERVICE=${STUNNEL_SERVICE:-stunnel}
+      - STUNNEL_ACCEPT=${STUNNEL_ACCEPT:-6697}
+      - STUNNEL_CONNECT=${STUNNEL_CONNECT:-localhost:6667}
+      - STUNNEL_CLIENT=${STUNNEL_CLIENT:-no}
+      - TZ=${TZ:-UTC}
+
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "6697"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+        compress: "true"
+
+    deploy:
+      resources:
+        limits:
+          memory: 256m
+          cpus: "0.5"
+        reservations:
+          memory: 64m
+          cpus: "0.1"
+
+    security_opt:
+      - no-new-privileges:true
+
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_BIND_SERVICE

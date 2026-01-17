@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: stunnel-config
+  namespace: stunnel
+  labels:
+    app.kubernetes.io/name: stunnel
+    app.kubernetes.io/component: configuration
+data:
+  STUNNEL_SERVICE: "stunnel"
+  STUNNEL_ACCEPT: "6697"
+  STUNNEL_CONNECT: "localhost:6667"
+  STUNNEL_CLIENT: "no"
+  TZ: "UTC"
