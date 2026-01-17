@@ -61,17 +61,18 @@ export STUNNEL_ACCEPT="${STUNNEL_ACCEPT:-6697}"
 export STUNNEL_CONNECT="${STUNNEL_CONNECT:-localhost:6667}"
 
 # Expand environment variables in config template
+# Write to /tmp since root filesystem may be read-only
 envsubst '$STUNNEL_SERVICE $STUNNEL_CLIENT $STUNNEL_ACCEPT $STUNNEL_CONNECT' \
   < /etc/stunnel/stunnel.conf.template \
-  > /etc/stunnel/stunnel.conf
+  > /tmp/stunnel.conf
 
 # Display configuration for debugging
 echo "=== Stunnel Configuration ==="
-cat /etc/stunnel/stunnel.conf
+cat /tmp/stunnel.conf
 echo "============================="
 
-# Start stunnel
-exec stunnel /etc/stunnel/stunnel.conf
+# Start stunnel with config from /tmp
+exec stunnel /tmp/stunnel.conf
 EOF
 
 USER stunnel
