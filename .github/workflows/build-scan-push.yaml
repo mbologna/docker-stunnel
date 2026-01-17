@@ -214,23 +214,46 @@ jobs:
             -e STUNNEL_CONNECT=localhost:6667 \
             ${{ secrets.DOCKER_USERNAME }}/docker-stunnel:latest
 
+          # Show logs for debugging
+          sleep 2
+          echo "=== Container logs ==="
+          docker logs stunnel-test
+          echo "====================="
+
           # Wait for healthy status
           for i in {1..30}; do
-            if docker inspect --format='{{.State.Health.Status}}' stunnel-test | grep -q healthy; then
-              echo "Container is healthy"
-              exit 0
+            STATUS=$(docker inspect --format='{{.State.Status}}' stunnel-test 2>/dev/null || echo "gone")
+            if [ "$STATUS" = "gone" ]; then
+              echo "Container disappeared!"
+              exit 1
             fi
-            echo "Waiting for container to be healthy... ($i/30)"
+
+            HEALTH=$(docker inspect --format='{{.State.Health.Status}}' stunnel-test 2>/dev/null || echo "none")
+            if [ "$HEALTH" = "healthy" ]; then
+              echo "Container is healthy"
+              break
+            fi
+
+            if [ "$STATUS" != "running" ]; then
+              echo "Container is not running (status: $STATUS)"
+              docker logs stunnel-test
+              exit 1
+            fi
+
+            echo "Waiting for container to be healthy... ($i/30) - Status: $STATUS, Health: $HEALTH"
             sleep 2
           done
 
-          echo "Container failed to become healthy"
-          docker logs stunnel-test
-          exit 1
+          if [ "$HEALTH" != "healthy" ]; then
+            echo "Container failed to become healthy"
+            docker logs stunnel-test
+            exit 1
+          fi
 
       - name: Test port binding
         run: |
-          timeout 10s docker exec stunnel-test nc -zv localhost 6697 || exit 1
+          # Test if stunnel is listening
+          docker exec stunnel-test nc -zv localhost 6697 || exit 1
 
       - name: Cleanup
         if: always()
