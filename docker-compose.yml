@@ -5,8 +5,8 @@ services:
       context: .
       dockerfile: Dockerfile
       cache_from:
-        - docker.io/mbologna/stunnel:latest
-    image: docker.io/mbologna/stunnel:latest
+        - docker.io/mbologna/docker-stunnel:latest
+    image: docker.io/mbologna/docker-stunnel:latest
     container_name: stunnel
     restart: unless-stopped
 
