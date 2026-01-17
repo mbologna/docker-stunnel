@@ -33,7 +33,7 @@ spec:
 
       containers:
         - name: stunnel
-          image: docker.io/mbologna/stunnel:latest
+          image: docker.io/mbologna/docker-stunnel:latest
           imagePullPolicy: Always
 
           ports:

@@ -1,8 +1,8 @@
 # Stunnel Docker Container
 
-[![Docker Pulls](https://img.shields.io/docker/pulls/mbologna/stunnel)](https://hub.docker.com/r/mbologna/stunnel)
+[![Docker Pulls](https://img.shields.io/docker/pulls/mbologna/docker-stunnel)](https://hub.docker.com/r/mbologna/docker-stunnel)
 [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/mbologna/docker-stunnel/build-scan-push.yml?branch=main)](https://github.com/mbologna/docker-stunnel/actions)
-[![Docker Image Size](https://img.shields.io/docker/image-size/mbologna/stunnel/latest)](https://hub.docker.com/r/mbologna/stunnel)
+[![Docker Image Size](https://img.shields.io/docker/image-size/mbologna/docker-stunnel/latest)](https://hub.docker.com/r/mbologna/docker-stunnel)
 [![License](https://img.shields.io/github/license/mbologna/docker-stunnel)](LICENSE)
 
 A lightweight, secure Stunnel TLS wrapper container based on Alpine Linux. Perfect for adding TLS encryption to any TCP service.
@@ -27,7 +27,7 @@ docker run -d \
   --name stunnel \
   -p 6697:6697 \
   -e STUNNEL_CONNECT=localhost:6667 \
-  mbologna/stunnel:latest
+  mbologna/docker-stunnel:latest
 ```
 
 ### Docker Compose
@@ -142,7 +142,7 @@ docker run -d \
   --name irc-stunnel \
   -p 6697:6697 \
   -e STUNNEL_CONNECT=irc.server.com:6667 \
-  mbologna/stunnel:latest
+  mbologna/docker-stunnel:latest
 ```
 
 ### TLS Wrapper for Redis
@@ -153,7 +153,7 @@ docker run -d \
   -p 6380:6380 \
   -e STUNNEL_ACCEPT=6380 \
   -e STUNNEL_CONNECT=redis:6379 \
-  mbologna/stunnel:latest
+  mbologna/docker-stunnel:latest
 ```
 
 ### TLS Client Mode
@@ -165,7 +165,7 @@ docker run -d \
   -e STUNNEL_CLIENT=yes \
   -e STUNNEL_ACCEPT=6667 \
   -e STUNNEL_CONNECT=remote.server.com:6697 \
-  mbologna/stunnel:latest
+  mbologna/docker-stunnel:latest
 ```
 
 ## Building Locally
