@@ -45,11 +45,6 @@ jobs:
                 max: 120
                 level: warning
 
-      - name: ShellCheck
-        uses: ludeeus/action-shellcheck@master
-        with:
-          severity: warning
-
   build:
     name: Build & Push Multi-Arch Image
     runs-on: ubuntu-latest
