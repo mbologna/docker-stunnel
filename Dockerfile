@@ -16,7 +16,10 @@ RUN apk add --no-cache \
     tini
 
 # Create stunnel user and required directories
-RUN addgroup -g 1000 -S stunnel && \
+# The stunnel package creates a stunnel user/group, so we use those
+RUN deluser stunnel 2>/dev/null || true && \
+    delgroup stunnel 2>/dev/null || true && \
+    addgroup -g 1000 -S stunnel && \
     adduser -u 1000 -S -G stunnel -h /var/lib/stunnel stunnel && \
     mkdir -p /var/lib/stunnel /var/run/stunnel /var/log/stunnel /etc/stunnel && \
     chown -R stunnel:stunnel /var/lib/stunnel /var/run/stunnel /var/log/stunnel /etc/stunnel
