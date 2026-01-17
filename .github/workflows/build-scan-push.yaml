@@ -15,7 +15,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  IMAGE_NAME: stunnel
+  IMAGE_NAME: docker-stunnel
   DOCKERHUB_NAMESPACE: ${{ secrets.DOCKER_USERNAME }}
   GHCR_NAMESPACE: ghcr.io/${{ github.repository_owner }}
 
@@ -123,7 +123,7 @@ jobs:
         if: github.event_name != 'pull_request'
         uses: anchore/sbom-action@v0
         with:
-          image: ${{ env.DOCKERHUB_NAMESPACE }}/${{ env.IMAGE_NAME }}:latest
+          image: ${{ env.DOCKERHUB_NAMESPACE }}/docker-stunnel:latest
           format: cyclonedx-json
           output-file: sbom.cyclonedx.json
 
@@ -157,7 +157,7 @@ jobs:
         if: matrix.scanner == 'trivy'
         uses: aquasecurity/trivy-action@0.28.0
         with:
-          image-ref: ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:latest
+          image-ref: ${{ secrets.DOCKER_USERNAME }}/docker-stunnel:latest
           format: sarif
           output: trivy-results.sarif
           ignore-unfixed: true
@@ -171,7 +171,7 @@ jobs:
         uses: anchore/scan-action@v4
         continue-on-error: true
         with:
-          image: ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:latest
+          image: ${{ secrets.DOCKER_USERNAME }}/docker-stunnel:latest
           fail-build: false
           severity-cutoff: high
           output-format: sarif
@@ -206,13 +206,13 @@ jobs:
 
       - name: Pull image
         run: |
-          docker pull ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:latest
+          docker pull ${{ secrets.DOCKER_USERNAME }}/docker-stunnel:latest
 
       - name: Test container startup
         run: |
           docker run -d --name stunnel-test \
             -e STUNNEL_CONNECT=localhost:6667 \
-            ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:latest
+            ${{ secrets.DOCKER_USERNAME }}/docker-stunnel:latest
 
           # Wait for healthy status
           for i in {1..30}; do
