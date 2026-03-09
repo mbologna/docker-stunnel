@@ -10,6 +10,8 @@ metadata:
 data:
   STUNNEL_SERVICE: "stunnel"
   STUNNEL_ACCEPT: "6697"
+  # Set STUNNEL_CONNECT to the actual backend address, e.g. "backend-service.default.svc.cluster.local:6667"
   STUNNEL_CONNECT: "localhost:6667"
   STUNNEL_CLIENT: "no"
+  STUNNEL_DEBUG: "2"
   TZ: "UTC"
