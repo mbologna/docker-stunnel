@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.7
 
-FROM alpine:latest
+FROM alpine:3.21
 
 LABEL org.opencontainers.image.title="Stunnel TLS Wrapper" \
       org.opencontainers.image.description="Stunnel on Alpine Linux - secure TLS tunnel" \
@@ -36,7 +36,7 @@ RUN openssl req -new -x509 -days 3650 -nodes \
 # Create stunnel configuration template
 COPY --chown=stunnel:stunnel <<'EOF' /etc/stunnel/stunnel.conf.template
 foreground = yes
-debug = 5
+debug = $STUNNEL_DEBUG
 syslog = no
 output = /var/log/stunnel/stunnel.log
 
@@ -59,10 +59,11 @@ export STUNNEL_SERVICE="${STUNNEL_SERVICE:-stunnel}"
 export STUNNEL_CLIENT="${STUNNEL_CLIENT:-no}"
 export STUNNEL_ACCEPT="${STUNNEL_ACCEPT:-6697}"
 export STUNNEL_CONNECT="${STUNNEL_CONNECT:-localhost:6667}"
+export STUNNEL_DEBUG="${STUNNEL_DEBUG:-2}"
 
 # Expand environment variables in config template
 # Write to /tmp since root filesystem may be read-only
-envsubst '$STUNNEL_SERVICE $STUNNEL_CLIENT $STUNNEL_ACCEPT $STUNNEL_CONNECT' \
+envsubst '$STUNNEL_SERVICE $STUNNEL_CLIENT $STUNNEL_ACCEPT $STUNNEL_CONNECT $STUNNEL_DEBUG' \
   < /etc/stunnel/stunnel.conf.template \
   > /tmp/stunnel.conf
 
