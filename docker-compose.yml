@@ -18,10 +18,11 @@ services:
       - STUNNEL_ACCEPT=${STUNNEL_ACCEPT:-6697}
       - STUNNEL_CONNECT=${STUNNEL_CONNECT:-localhost:6667}
       - STUNNEL_CLIENT=${STUNNEL_CLIENT:-no}
+      - STUNNEL_DEBUG=${STUNNEL_DEBUG:-2}
       - TZ=${TZ:-UTC}
 
     healthcheck:
-      test: ["CMD", "nc", "-z", "localhost", "6697"]
+      test: ["CMD", "nc", "-z", "localhost", "${STUNNEL_ACCEPT:-6697}"]
       interval: 30s
       timeout: 5s
       retries: 3

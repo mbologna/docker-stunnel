@@ -37,3 +37,6 @@ k8s/
 # OS
 .DS_Store
 Thumbs.db
+
+# Claude Code
+.claude/
