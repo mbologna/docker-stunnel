@@ -54,3 +54,6 @@ grype-results.sarif
 # SBOM files
 sbom*.json
 sbom*.xml
+
+# Claude Code
+CLAUDE.md
