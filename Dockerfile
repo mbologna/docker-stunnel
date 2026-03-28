@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.7
 
-FROM alpine:3.21
+FROM alpine:3.23
 
 LABEL org.opencontainers.image.title="Stunnel TLS Wrapper" \
       org.opencontainers.image.description="Stunnel on Alpine Linux - secure TLS tunnel" \
