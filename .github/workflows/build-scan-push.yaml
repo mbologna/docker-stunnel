@@ -121,7 +121,7 @@ jobs:
 
       - name: Generate SBOM
         if: github.event_name != 'pull_request'
-        uses: anchore/sbom-action@v0.23.0
+        uses: anchore/sbom-action@v0.24.0
         with:
           image: ${{ env.DOCKERHUB_NAMESPACE }}/${{ env.IMAGE_NAME }}:latest
           format: cyclonedx-json
