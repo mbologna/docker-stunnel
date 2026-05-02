@@ -1,0 +1,12 @@
+name: Test
+
+"on":
+  push:
+    branches: [test-minimal]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "hello"
+
