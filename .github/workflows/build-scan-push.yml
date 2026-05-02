@@ -2,10 +2,10 @@ name: Build, Scan and Push
 
 on:
   workflow_dispatch:
-  pull_request:
-    branches: [main]
 
 jobs:
   docker:
-    uses: mbologna/.github/.github/workflows/test-secrets.yml@main
+    uses: mbologna/.github/.github/workflows/test-minimal-docker.yml@main
+    with:
+      image_name: docker-stunnel
     secrets: inherit
