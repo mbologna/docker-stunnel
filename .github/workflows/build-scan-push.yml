@@ -7,6 +7,6 @@ on:
 
 jobs:
   docker:
-    uses: mbologna/.github/.github/workflows/test-reusable.yml@main
+    uses: mbologna/.github/.github/workflows/test-inputs-if.yml@main
     with:
-      message: "test from docker-stunnel"
+      enable_scan: true
