@@ -14,15 +14,16 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+  packages: write
+  id-token: write
+  attestations: write
+  security-events: write
+
 jobs:
   docker:
     uses: mbologna/.github/.github/workflows/docker-build-scan-push.yml@main
-    permissions:
-      contents: read
-      packages: write
-      id-token: write
-      attestations: write
-      security-events: write
     with:
       image_name: docker-stunnel
     secrets: inherit
