@@ -1,6 +1,6 @@
 name: Build, Scan and Push
 
-"on":
+on:
   push:
     branches: [main]
     tags: ["v*.*.*"]
