@@ -1,12 +1,25 @@
 name: Build, Scan and Push
 
 on:
-  workflow_dispatch:
+  push:
+    branches: [main]
+    tags: ["v*.*.*"]
   pull_request:
     branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "hello"
+  docker:
+    uses: mbologna/.github/.github/workflows/docker-build-scan-push.yml@main
+    with:
+      image_name: docker-stunnel
+      push_to_dockerhub: true
+      enable_grype: true
+      enable_cosign: true
+      enable_integration_test: false
+      enable_release_drafter: false
+    secrets: inherit
