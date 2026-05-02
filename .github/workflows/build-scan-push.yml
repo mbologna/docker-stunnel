@@ -7,6 +7,5 @@ on:
 
 jobs:
   docker:
-    uses: mbologna/.github/.github/workflows/test-inputs-if.yml@main
-    with:
-      enable_scan: true
+    uses: mbologna/.github/.github/workflows/test-secrets.yml@main
+    secrets: inherit
