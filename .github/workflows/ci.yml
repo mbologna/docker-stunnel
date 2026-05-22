@@ -23,7 +23,7 @@ permissions:
 
 jobs:
   docker:
-    uses: mbologna/.github/.github/workflows/docker-build-scan-push.yml@aeb30e0b1fc4aef2b2c92b84dd07b87ab5e3ab6b # main
+    uses: mbologna/.github/.github/workflows/docker-build-scan-push.yml@79e90cadfb3336caf16e4f749548dbea92d8d3bc # main
     with:
       image_name: docker-stunnel
       enable_release_drafter: true
