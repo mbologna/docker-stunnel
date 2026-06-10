@@ -28,3 +28,12 @@ jobs:
       image_name: docker-stunnel
       enable_release_drafter: true
     secrets: inherit
+
+  auto-release:
+    if: github.event_name == 'schedule'
+    needs: [docker]
+    uses: mbologna/.github/.github/workflows/auto-release.yml@b76cd3762a1b6787ae79e88f7c012b2dc848f325 # main
+    with:
+      strategy: docker
+      image: docker.io/mbologna/docker-stunnel
+    secrets: inherit
