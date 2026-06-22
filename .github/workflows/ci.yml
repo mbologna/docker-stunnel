@@ -23,7 +23,7 @@ permissions:
 
 jobs:
   docker:
-    uses: mbologna/.github/.github/workflows/docker-ci.yml@17e62b3f3f9e7985d155f652d47162ffada15cb6 # main
+    uses: mbologna/.github/.github/workflows/docker-ci.yml@b84e24e2ad726629e7d50cd30cdaca387dcdc3a1 # main
     with:
       image_name: docker-stunnel
       enable_release_drafter: true
@@ -32,7 +32,7 @@ jobs:
   auto-release:
     if: github.event_name == 'schedule'
     needs: [docker]
-    uses: mbologna/.github/.github/workflows/auto-release.yml@17e62b3f3f9e7985d155f652d47162ffada15cb6 # main
+    uses: mbologna/.github/.github/workflows/auto-release.yml@b84e24e2ad726629e7d50cd30cdaca387dcdc3a1 # main
     with:
       strategy: docker
       image: docker.io/mbologna/docker-stunnel
