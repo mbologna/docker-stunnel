@@ -1,7 +1,7 @@
 # Stunnel Docker Container
 
 [![Docker Pulls](https://img.shields.io/docker/pulls/mbologna/docker-stunnel)](https://hub.docker.com/r/mbologna/docker-stunnel)
-[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/mbologna/docker-stunnel/build-scan-push.yml?branch=main)](https://github.com/mbologna/docker-stunnel/actions)
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/mbologna/docker-stunnel/ci.yml?branch=main)](https://github.com/mbologna/docker-stunnel/actions)
 [![Docker Image Size](https://img.shields.io/docker/image-size/mbologna/docker-stunnel/latest)](https://hub.docker.com/r/mbologna/docker-stunnel)
 [![License](https://img.shields.io/github/license/mbologna/docker-stunnel)](LICENSE)
 
