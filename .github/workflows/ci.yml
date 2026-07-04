@@ -37,3 +37,11 @@ jobs:
       strategy: docker
       image: docker.io/mbologna/docker-stunnel
     secrets: inherit
+
+  cache-cleanup:
+    if: github.event_name == 'schedule'
+    uses: mbologna/.github/.github/workflows/cache-cleanup.yml@7db69c646b42efd904a52154bf076a5912397c45 # main
+    with:
+      max_age_days: 7
+    permissions:
+      actions: write
