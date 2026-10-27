@@ -25,7 +25,7 @@ permissions:
 
 jobs:
   docker:
-    uses: mbologna/.github/.github/workflows/docker-ci.yml@31ef9e1806fb2404b1e83e71cdb3838a2c56b5c1 # main
+    uses: mbologna/.github/.github/workflows/docker-ci.yml@e0ca3700bd9629e5d400755fbb8bb6e3740d9bf2 # main
     with:
       image_name: docker-stunnel
       enable_release_drafter: true
@@ -46,7 +46,7 @@ jobs:
       contents: write
       actions: write
     needs: [docker]
-    uses: mbologna/.github/.github/workflows/auto-release.yml@31ef9e1806fb2404b1e83e71cdb3838a2c56b5c1 # main
+    uses: mbologna/.github/.github/workflows/auto-release.yml@e0ca3700bd9629e5d400755fbb8bb6e3740d9bf2 # main
     with:
       strategy: docker
       image: docker.io/mbologna/docker-stunnel
@@ -54,7 +54,7 @@ jobs:
 
   cache-cleanup:
     if: github.event_name == 'schedule'
-    uses: mbologna/.github/.github/workflows/cache-cleanup.yml@31ef9e1806fb2404b1e83e71cdb3838a2c56b5c1 # main
+    uses: mbologna/.github/.github/workflows/cache-cleanup.yml@e0ca3700bd9629e5d400755fbb8bb6e3740d9bf2 # main
     with:
       max_age_days: 7
     permissions:
