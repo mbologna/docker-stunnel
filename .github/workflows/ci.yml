@@ -48,7 +48,7 @@ jobs:
     needs: [docker]
     uses: mbologna/.github/.github/workflows/auto-release.yml@b85a51a50cc1e566534b425c3275095a1b7fb58a # main
     with:
-      strategy: docker
+      strategy: conventional
       image: docker.io/mbologna/docker-stunnel
     secrets: inherit
 
