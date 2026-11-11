@@ -7,9 +7,9 @@
 
 > **Renamed on 2026-11-11.** This repository was `docker-stunnel` and the image
 > was `mbologna/docker-stunnel`; pull `mbologna/stunnel` (or
-> `ghcr.io/mbologna/stunnel`) instead. The old image name gets the same builds
-> until 2027-05-11 and then stops updating. Release tags published before the
-> rename exist only under the old name.
+> `ghcr.io/mbologna/stunnel`) instead. The old image name keeps getting the same
+> builds, so nothing breaks if you stay on it. Release tags published before
+> the rename exist only under the old name.
 
 A lightweight, secure Stunnel TLS wrapper container based on Alpine Linux. Perfect for adding TLS encryption to any TCP service.
 
