@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-IMAGE="${IMAGE_REF:-${DOCKER_USERNAME}/docker-stunnel:latest}"
+IMAGE="${IMAGE_REF:-${DOCKER_USERNAME}/stunnel:latest}"
 
 docker pull "$IMAGE"
 
