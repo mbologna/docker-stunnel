@@ -25,9 +25,13 @@ permissions:
 
 jobs:
   docker:
-    uses: mbologna/.github/.github/workflows/docker-ci.yml@67d7c1caf42127542e549239033c9010a90716ba # main
+    uses: mbologna/.github/.github/workflows/docker-ci.yml@4d8700c2b590ccd3ccd67de77767ce79e1133b83 # main
     with:
-      image_name: docker-stunnel
+      image_name: stunnel
+      # The image was docker-stunnel until 2026-11-11. Registries don't
+      # redirect a renamed repository, so the old name gets the same builds
+      # until 2027-05-11; then drop this line.
+      legacy_image_names: docker-stunnel
       enable_release_drafter: true
     secrets: inherit
 
@@ -46,15 +50,15 @@ jobs:
       contents: write
       actions: write
     needs: [docker]
-    uses: mbologna/.github/.github/workflows/auto-release.yml@67d7c1caf42127542e549239033c9010a90716ba # main
+    uses: mbologna/.github/.github/workflows/auto-release.yml@4d8700c2b590ccd3ccd67de77767ce79e1133b83 # main
     with:
       strategy: conventional
-      image: docker.io/mbologna/docker-stunnel
+      image: docker.io/mbologna/stunnel
     secrets: inherit
 
   cache-cleanup:
     if: github.event_name == 'schedule'
-    uses: mbologna/.github/.github/workflows/cache-cleanup.yml@67d7c1caf42127542e549239033c9010a90716ba # main
+    uses: mbologna/.github/.github/workflows/cache-cleanup.yml@4d8700c2b590ccd3ccd67de77767ce79e1133b83 # main
     with:
       max_age_days: 7
     permissions:
