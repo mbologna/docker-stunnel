@@ -7,41 +7,40 @@ LABEL org.opencontainers.image.title="Stunnel TLS Wrapper" \
       org.opencontainers.image.url="https://github.com/mbologna/stunnel-container" \
       org.opencontainers.image.licenses="MIT"
 
-# Install stunnel and dependencies
+# Install stunnel and what the entrypoint and health check run: openssl
+# (the default certificate), envsubst (the config template), nc (the health
+# check), tini (PID 1). gettext-envsubst is envsubst alone, without the rest
+# of gettext.
 RUN apk add --no-cache \
     ca-certificates \
     stunnel \
     openssl \
     netcat-openbsd \
-    gettext \
+    gettext-envsubst \
     tini
 
 # Create stunnel user and required directories
-# The stunnel package creates a stunnel user/group, so we use those
+# The stunnel package creates a stunnel user/group, so we use those.
+# /etc/stunnel stays root-owned: stunnel only reads it. It writes only to its
+# log, run and home directories.
 RUN deluser stunnel 2>/dev/null || true && \
     delgroup stunnel 2>/dev/null || true && \
     addgroup -g 1000 -S stunnel && \
     adduser -u 1000 -S -G stunnel -h /var/lib/stunnel stunnel && \
     mkdir -p /var/lib/stunnel /var/run/stunnel /var/log/stunnel /etc/stunnel && \
-    chown -R stunnel:stunnel /var/lib/stunnel /var/run/stunnel /var/log/stunnel /etc/stunnel
+    chown -R stunnel:stunnel /var/lib/stunnel /var/run/stunnel /var/log/stunnel
 
-# Generate self-signed certificate at build time
-RUN openssl req -new -x509 -days 3650 -nodes \
-    -out /etc/stunnel/stunnel.pem \
-    -keyout /etc/stunnel/stunnel.pem \
-    -subj "/CN=stunnel/O=Stunnel/C=US" && \
-    chmod 600 /etc/stunnel/stunnel.pem && \
-    chown stunnel:stunnel /etc/stunnel/stunnel.pem
-
-# Create stunnel configuration template
-COPY --chown=stunnel:stunnel <<'EOF' /etc/stunnel/stunnel.conf.template
+# Create stunnel configuration template. $STUNNEL_PEM is set by the
+# entrypoint: the mounted /etc/stunnel/stunnel.pem, or a certificate it
+# generates at start.
+COPY <<'EOF' /etc/stunnel/stunnel.conf.template
 foreground = yes
 debug = $STUNNEL_DEBUG
 syslog = no
 output = /var/log/stunnel/stunnel.log
 
-cert = /etc/stunnel/stunnel.pem
-key = /etc/stunnel/stunnel.pem
+cert = $STUNNEL_PEM
+key = $STUNNEL_PEM
 
 [$STUNNEL_SERVICE]
 client = $STUNNEL_CLIENT
@@ -61,9 +60,23 @@ export STUNNEL_ACCEPT="${STUNNEL_ACCEPT:-6697}"
 export STUNNEL_CONNECT="${STUNNEL_CONNECT:-localhost:6667}"
 export STUNNEL_DEBUG="${STUNNEL_DEBUG:-2}"
 
+# Certificate: a mounted /etc/stunnel/stunnel.pem (certificate and key in one
+# file) wins. Without one, generate a self-signed certificate at every start,
+# in /tmp since the root filesystem may be read-only: a key generated at build
+# time would be shared by everyone who pulls the image.
+if [ -f /etc/stunnel/stunnel.pem ]; then
+  export STUNNEL_PEM=/etc/stunnel/stunnel.pem
+else
+  export STUNNEL_PEM=/tmp/stunnel.pem
+  echo "No /etc/stunnel/stunnel.pem mounted: generating a self-signed certificate"
+  (umask 077 && openssl req -new -x509 -days 3650 -nodes -newkey rsa:2048 \
+    -out "$STUNNEL_PEM" -keyout "$STUNNEL_PEM" \
+    -subj "/CN=stunnel/O=Stunnel/C=US" 2>/dev/null)
+fi
+
 # Expand environment variables in config template
 # Write to /tmp since root filesystem may be read-only
-envsubst '$STUNNEL_SERVICE $STUNNEL_CLIENT $STUNNEL_ACCEPT $STUNNEL_CONNECT $STUNNEL_DEBUG' \
+envsubst '$STUNNEL_SERVICE $STUNNEL_CLIENT $STUNNEL_ACCEPT $STUNNEL_CONNECT $STUNNEL_DEBUG $STUNNEL_PEM' \
   < /etc/stunnel/stunnel.conf.template \
   > /tmp/stunnel.conf
 

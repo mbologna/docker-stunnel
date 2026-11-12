@@ -22,7 +22,7 @@ A lightweight, secure Stunnel TLS wrapper container based on Alpine Linux. Perfe
 - 🔍 **Automated vulnerability scanning:** Trivy and Grype scans in CI/CD
 - 🚀 **Optimized builds:** Minimal Alpine base, layer caching
 - ☸️ **Kubernetes-ready:** Production-grade manifests included
-- 🔐 **Self-signed certificate:** Generated at build time, no runtime generation needed
+- 🔐 **Self-signed certificate:** Generated at container start when you don't mount your own, so no two containers share a private key
 
 ## Quick Start
 
@@ -108,6 +108,12 @@ kubectl rollout restart -n stunnel deployment/stunnel
 ```
 
 ## Custom Certificate
+
+Mount a PEM file holding the certificate and its private key at
+`/etc/stunnel/stunnel.pem`. Without one, the entrypoint generates a
+self-signed certificate (`CN=stunnel`) in `/tmp` at every start, so its
+fingerprint changes when the container is recreated: mount your own if
+clients pin it.
 
 ### Docker Compose
 
@@ -230,5 +236,6 @@ resources:
 - Read-only root filesystem
 - All capabilities dropped
 - Seccomp profile enabled
-- Self-signed certificate included (replace for production)
+- No private key in the image: without a mounted certificate, a self-signed one is generated at start (replace it for production)
+- Configuration directory owned by root, read-only for the stunnel user
 - Regular vulnerability scanning via CI/CD
