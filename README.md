@@ -5,6 +5,11 @@
 [![Docker Image Size](https://img.shields.io/docker/image-size/mbologna/stunnel/latest)](https://hub.docker.com/r/mbologna/stunnel)
 [![License](https://img.shields.io/github/license/mbologna/stunnel-container)](LICENSE)
 
+> **Archived on 2026-11-14: no longer maintained.** The images stay on Docker Hub
+> and GHCR but get no more builds or security fixes. For a TLS wrapper, install
+> your distribution's `stunnel` package (Debian `stunnel4`, Alpine `stunnel`) in
+> the image that needs it, or run any maintained stunnel image.
+
 > **Renamed on 2026-11-11.** This repository was `docker-stunnel` and the image
 > was `mbologna/docker-stunnel`; pull `mbologna/stunnel` (or
 > `ghcr.io/mbologna/stunnel`) instead. The old image name keeps getting the same
